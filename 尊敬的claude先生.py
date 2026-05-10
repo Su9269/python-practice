@@ -155,71 +155,84 @@
 
 # DAY9
 # 1
-myclass = {"a": {"math": 90, "english": 80, "science": 100}, "b": {"math": 10, "english": 40, "science": 70},
-           "c": {"math": 50, "english": 80, "science": 80}, "d": {"math": 50, "english": 80, "science": 65}, "e": {"math": 80, "english": 90, "science": 70}}
-for name, score in myclass.items():
-    print("這是", name, "的成績單", "math的分數是:",
-          score["math"], "english的分數是:", score["english"], "science的分數是:", score["science"])
+# myclass = {"a": {"math": 90, "english": 80, "science": 100}, "b": {"math": 10, "english": 40, "science": 70},
+#         "c": {"math": 50, "english": 80, "science": 80}, "d": {"math": 50, "english": 80, "science": 65}, "e": {"math": 80, "english": 90, "science": 70}}
+# for name, score in myclass.items():
+# print("這是", name, "的成績單", "math的分數是:",
+#      score["math"], "english的分數是:", score["english"], "science的分數是:", score["science"])
 
 
-def avgmachine(scores):
-    for name, score in scores.items():
-        print(f"{name}的平均是{sum(score.values())/len(score.values())}")
+# def avgmachine(scores):
+#   for name, score in scores.items():
+#      print(f"{name}的平均是{sum(score.values())/len(score.values())}")
 
 
-avgmachine(myclass)
+# avgmachine(myclass)
 
 
-def failer(scores):
-    count = 0
-    for name, score in scores.items():
-        if sum(score.values())/len(score.values()) < 60:
-            count += 1
-    return count
+# def failer(scores):
+# count = 0
+#   for name, score in scores.items():
+#      if sum(score.values())/len(score.values()) < 60:
+#        count += 1
+# return count
 
 
-print(f"班上有{failer(myclass)}個人平均不及格")
+# print(f"班上有{failer(myclass)}個人平均不及格")
 
 
-def top(scores):
-    topname = ""
-    topscore = 0
-    for name, score in scores.items():
-        avg = sum(score.values())/len(score.values())
-        if avg > topscore:
-            topscore = avg
-            topname = name
-    return topname
+# def top(scores):
+#   topname = ""
+#  topscore = 0
+# for name, score in scores.items():
+#    avg = sum(score.values())/len(score.values())
+#   if avg > topscore:
+#      topscore = avg
+#     topname = name
+# return topname
 
 
-print(f"{top(myclass)}是班上平均最高的人")
+# print(f"{top(myclass)}是班上平均最高的人")
 
 
-def last(scores):
-    lastname = ""
-    lastscore = 100
-    for name, score in scores.items():
-        avg = (sum(score.values())/len(score.values()))
-        if avg < lastscore:
-            lastscore = avg
-            lastname = name
-    return lastname
+# def last(scores):
+#   lastname = ""
+#  lastscore = 100
+# for name, score in scores.items():
+#    avg = (sum(score.values())/len(score.values()))
+#   if avg < lastscore:
+#      lastscore = avg
+#     lastname = name
+# return lastname
 
 
-print(f"{last(myclass)}是班上平均最低的人")
+# print(f"{last(myclass)}是班上平均最低的人")
 
 
-def mathking(scores):
-    topmathguy = ""
-    topmathscore = 0
-    for name, score in scores.items():
-        for subject in score:
-            mathscore = score["math"]
-            if mathscore > topmathscore:
-                topmathscore = mathscore
-                topmathguy = name
-    return topmathguy
+# def mathking(scores):
+#   topmathguy = ""
+#  topmathscore = 0
+# for name, score in scores.items():
+#    for subject in score:
+#       mathscore = score["math"]
+#      if mathscore > topmathscore:
+#         topmathscore = mathscore
+#        topmathguy = name
+# return topmathguy
 
 
-print(f"{mathking(myclass)}是班上數學最高分")
+# print(f"{mathking(myclass)}是班上數學最高分")
 # 各科以此類推
+
+names = ["freeman", "kim", "ohtani", "betts"]
+avgs = [.398, .250, .411, .302]
+for name, battingavg in zip(names, avgs):
+    print(f"{name}的打擊率是{battingavg}")
+
+newavgs = list(map(lambda x: x/10, avgs))
+print(newavgs)
+
+
+good_batter = list(filter(lambda x: x[1] >= 0.35, zip(names, avgs)))
+for batter in good_batter:
+    print(f"{batter[0]} is good at batting")
