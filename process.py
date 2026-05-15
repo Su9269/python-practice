@@ -41,10 +41,38 @@ print(under60)
 # def function():....一個函式
 # return 在function的最後面 回傳一個值可以後的計算或print
 
-df = pd.DataFrame({"team": ["A", "A", "A", "B", "B", "B"], "name": [
-                  "Amy", "John", "Eric", "Tom", "Kevin", "Mary"], "score": [80, 50, 90, 40, 70, 60]})
+df = pd.DataFrame({"team": ["A", "A", "A", "B", "B"], "name": [
+                  "Amy", "John", "Eric", "Tom", "Kevin"], "score": [80, 50, 90, 40, 70]})
 
 print(df.groupby("team")["score"].mean())
 print(df.groupby("team")["score"].agg(['mean', 'max', 'min']))
 teamavg = df.groupby("team")["score"].mean()
 print(teamavg[teamavg < 60])
+
+print(df[df["score"] > 60])
+print(list(filter(lambda x: x["score"] > 60, df.to_dict("records"))))
+print(df[df["team"] == "B"])
+print(df[(df["team"] == "B") & (df["score"] > 60)])
+print(list(sorted(df["score"], reverse=True)))
+
+myscore = [80, 50, 90, 40]
+
+
+def scorefilter(scores):
+    count = 0
+    for i in scores:
+        if i > 60:
+            count += 1
+    return count
+
+
+print(scorefilter(myscore))
+
+myclass = {"Amy": 80, "John": 55, "Eric": 90}
+bestone = ""
+bestscore = 0
+for name, score in myclass.items():
+    if score > bestscore:
+        bestscore = score
+        bestone = name
+print(bestone)
