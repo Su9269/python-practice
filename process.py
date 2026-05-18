@@ -76,3 +76,37 @@ for name, score in myclass.items():
         bestscore = score
         bestone = name
 print(bestone)
+
+
+score = [80, 50, 90, 40, 70]
+
+
+def score_filter(scores):
+    counthigh = 0
+    countlow = 0
+    for i in scores:
+        if i > 60:
+            counthigh += 1
+        else:
+            countlow += 1
+    print(f"high:{counthigh},low:{countlow}")
+
+
+score_filter(score)
+
+students = {"Amy": 80, "John": 55, "Eric": 90, "Tom": 40}
+avg = sum(students.values())/len(students)
+fail_in_exams = []
+for name, score in students.items():
+    if score < avg:
+        fail_in_exams.append(name)
+print(fail_in_exams)
+
+
+df2 = pd.DataFrame({"name": ["Amy", "John", "Eric", "Tom", "Kevin", "Mary", "David"], "team": ["A", "A", "B", "B", "B", "A", "C"], "score": [
+    80, 50, 90, 40, 70, 85, 60], "salary": [50000, 40000, 90000, 35000, 60000, 70000, 45000]})
+print(df2.groupby("team")["name"].count())
+print(df2.sort_values("score", ascending=False).head(3))
+print(df2.groupby("team")["score"].mean())
+print(df2["salary"].mean())
+print(df2[(df2["score"] < 60) & (df2["salary"] > 55000)])
