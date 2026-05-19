@@ -1,4 +1,6 @@
 # 1
+import sqlite3
+import sqlite3 as SQL
 import pandas as pd
 
 
@@ -81,32 +83,39 @@ print(bestone)
 score = [80, 50, 90, 40, 70]
 
 
-def score_filter(scores):
-    counthigh = 0
-    countlow = 0
+def score_tidy(scores):
     for i in scores:
-        if i > 60:
-            counthigh += 1
-        else:
-            countlow += 1
-    print(f"high:{counthigh},low:{countlow}")
+        smallest = min(scores)
+        largest = max(scores)
+        avgs = avg(scores)
+    return {"min": smallest, "max": largest, "avg": avgs}
 
 
-score_filter(score)
+print(score_tidy(score))
 
 students = {"Amy": 80, "John": 55, "Eric": 90, "Tom": 40}
 avg = sum(students.values())/len(students)
-fail_in_exams = []
+pass_in_exams = []
 for name, score in students.items():
-    if score < avg:
-        fail_in_exams.append(name)
-print(fail_in_exams)
+    if score > avg:
+        pass_in_exams.append(name)
+print(pass_in_exams)
 
 
-df2 = pd.DataFrame({"name": ["Amy", "John", "Eric", "Tom", "Kevin", "Mary", "David"], "team": ["A", "A", "B", "B", "B", "A", "C"], "score": [
-    80, 50, 90, 40, 70, 85, 60], "salary": [50000, 40000, 90000, 35000, 60000, 70000, 45000]})
-print(df2.groupby("team")["name"].count())
-print(df2.sort_values("score", ascending=False).head(3))
-print(df2.groupby("team")["score"].mean())
+df2 = pd.DataFrame({
+    "employee": ["Amy", "John", "Eric", "Tom", "Kevin", "Mary", "David", "Jenny"],
+    "department": ["Sales", "Sales", "Tech", "Tech", "Tech", "HR", "HR", "Sales"],
+    "performance": [80, 50, 95, 40, 70, 85, 60, 75],
+    "salary": [50000, 40000, 100000, 35000, 65000, 70000, 45000, 55000],
+    "years": [2, 1, 5, 1, 3, 4, 2, 3]
+})
+print(df2[df2["performance"] > 70])
+print(df2[df2["department"] == "Tech"])
+print(df2[(df2["salary"] > df2["salary"].mean()) & (df2["performance"] < 60)])
+print(df2[(df2["salary"] > df2["salary"].mean()) & (
+    df2["performance"] < df2["performance"].mean())])
+print(df2.groupby("department")["performance"].mean())
+print(df2.sort_values("salary", ascending=False).head(3))
+print(df2.sort_values("performance", ascending=False).head(3))
 print(df2["salary"].mean())
-print(df2[(df2["score"] < 60) & (df2["salary"] > 55000)])
+print(df2.groupby("department")["salary"].mean())
