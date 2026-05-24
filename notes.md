@@ -12,6 +12,7 @@
 - scatter = 散佈圖
 - annotate = 在圖上標文字
 - tight_layout = 自動調整間距避免文字被切掉
+- fill_between(X軸範圍, 下邊界, 上邊界) = 在兩條線之間填滿顏色
 
 ## Numpy
 - array = np.array出來的串列可以直接做運算

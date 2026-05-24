@@ -26,3 +26,18 @@ plt.ylabel("prices(US dollars)")
 plt.title("2023 TMC stock prices")
 plt.tight_layout
 plt.show()
+# 最大回撤:從最高點跌到最低點，最多跌了幾％
+rolling_max = df["Close"].cummax()
+drawdown = (df["Close"]-rolling_max)/rolling_max
+mdd = drawdown.min()
+print(f"最大回撤：{mdd.values[0]:.2%}")
+
+# squeeze可以有效壓縮至正確維度
+drawdown_1d = drawdown.squeeze()
+plt.figure(figsize=(12, 6))
+plt.plot(df.index, drawdown_1d)
+plt.fill_between(df.index, drawdown_1d, 0, alpha=0.3, color='red')
+plt.ylabel("回撤")
+plt.title("TSM 2023 回撤走勢")
+plt.tight_layout()
+plt.show()
