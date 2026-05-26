@@ -1,0 +1,11 @@
+customer,department,sales,profit,years,region
+Amy,Electronics,50000,12000,2,North
+John,Electronics,40000,8000,1,South
+Eric,Tech,100000,35000,5,North
+Tom,Tech,35000,-2000,1,West
+Kevin,Tech,65000,15000,3,East
+Mary,HR,70000,18000,4,North
+David,HR,45000,5000,2,South
+Jenny,Electronics,55000,10000,3,East
+Mike,Finance,90000,25000,6,West
+Cindy,Finance,42000,3000,1,South
