@@ -9,6 +9,7 @@
 - shift = 往後移
 - cumprod = 累積相乘
 - iloc = 取值
+- loc = 透過欄位選取資料
 
 ## Matplotlib
 - barh = 水平長條圖
