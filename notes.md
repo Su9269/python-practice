@@ -10,7 +10,8 @@
 - cumprod = 累積相乘
 - iloc = 取值
 - loc = 透過欄位選取資料
-
+- isnull = 檢查資料缺失的值，並回傳一個布林值
+- duplicated = 用來檢查 DataFrame 中是否有重複的列（Row），並回傳一個布林值
 ## Matplotlib
 - barh = 水平長條圖
 - bar = 垂直長條圖
@@ -25,6 +26,11 @@
 - max、min、mean、std... = 有多統計量可以使用做運算
 - diff = 可以將串列的每一個元素做後減前的運算，所以最後會生成一個比原本串列少一個元素的串列
 - sqrt = 開根號
+- reshape = 重塑陣列微度，後面的-1代表的是自動計算微度
+
 
 ## Function
 - cummax() = 計算出整體資料的最大值
+
+## Scikit-learn
+- model.fit() = 讓模型去適應(訓練)數據，x:用來訓練的變數 y:目標變數，想要預測的值
