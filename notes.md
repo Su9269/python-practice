@@ -12,6 +12,8 @@
 - loc = 透過欄位選取資料
 - isnull = 檢查資料缺失的值，並回傳一個布林值
 - duplicated = 用來檢查 DataFrame 中是否有重複的列（Row），並回傳一個布林值
+- astype = 將資料形式轉換成想要的種類
+
 ## Matplotlib
 - barh = 水平長條圖
 - bar = 垂直長條圖
