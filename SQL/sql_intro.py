@@ -5,7 +5,7 @@ conn = sqlite3.connect("nba.db")
 df.to_sql("players", conn, if_exists="replace", index=False)
 
 
-query = "SELECT COUNT(DISTINCT TEAM) FROM players"
+query = "SELECT COUNT(*) FROM players"
 print(pd.read_sql(query, conn))
 team_info = pd.DataFrame({
     "TEAM": ["Lal", "Phi", "Bos", "Den"],
@@ -16,11 +16,12 @@ team_info = pd.DataFrame({
 team_info.to_sql("teams", conn, if_exists="replace", index=False)
 
 query = """
-SELECT players.NAME,players.TEAM,players.POS,players.PPG,teams.CONFERENCE,teams.CITY
-FROM players
-LEFT JOIN teams ON players.TEAM = teams.TEAM
-ORDER BY players.PPG DESC
-LIMIT 15
+SELECT NAME,TEAM,APG FROM players
+WHERE APG>(SELECT AVG(APG) FROM players)
+ORDER BY APG DESC
 """
 result = pd.read_sql(query, conn)
 print(result)
+
+query = "SELECT AVG(APG) FROM players"
+print(pd.read_sql(query, conn))
