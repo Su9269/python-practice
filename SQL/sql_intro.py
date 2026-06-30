@@ -16,12 +16,15 @@ team_info = pd.DataFrame({
 team_info.to_sql("teams", conn, if_exists="replace", index=False)
 
 query = """
-SELECT NAME,TEAM,APG FROM players
-WHERE APG>(SELECT AVG(APG) FROM players)
-ORDER BY APG DESC
+SELECT NAME,TEAM,APG,
+CASE
+    WHEN PPG>=25 THEN "SUPER-STAR"
+    WHEN PPG>=15 THEN "MAIN-PLAYER"
+    ELSE "BENCH"
+END AS Player_lavel
+FROM players
+ORDER BY PPG DESC
+LIMIT 30
 """
 result = pd.read_sql(query, conn)
 print(result)
-
-query = "SELECT AVG(APG) FROM players"
-print(pd.read_sql(query, conn))
