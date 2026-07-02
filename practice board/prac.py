@@ -4,25 +4,22 @@ pd.set_option('display.max_rows', None)     # 秀出所有列
 pd.set_option('display.max_columns', None)  # 秀出所有欄
 pd.set_option('display.max_colwidth', None)  # 秀出儲存格完整文字
 
+
 data = {
-    "employee": ["A", "B", "C", "D", "E", "F", "G"],
-    "department": ["Tech", "Tech", "HR", "HR", "Sales", "Sales", "Sales"],
-    "sales": [100, 300, 150, None, 600, 700, 200],
-    "cost": [80, 240, 60, 200, 500, 350, 190]
+    "customer": ["C001", "C002", "C003", "C004", "C005", "C006", "C007", "C008"],
+    "region": ["North", "North", "South", "South", "East", "East", "West", "West"],
+    "sales": [1200, 800, 500, 1500, 300, 2000, 900, 400],
+    "cost": [900, 500, 450, 1000, 250, 1200, 700, 350],
+    "orders": [12, 8, 5, 15, 3, 20, 10, 4]
 }
+
 df = pd.DataFrame(data)
 df.at[3, "sales"] = df["sales"].median()
 df["profit"] = df["sales"]-df["cost"]
 df["profit_rate"] = df["profit"]/df["sales"]
-print(df.groupby("department")[
-      ["sales", "profit", "profit_rate"]].aggregate(["mean", "std", ("range", lambda x: x.max()-x.min())]))
-data_list = [df.loc[df["department"] == "Tech", "profit_rate"], df.loc[df["department"]
-                                                                       == "HR", "profit_rate"], df.loc[df["department"] == "Sales", "profit_rate"]]
-color_list = ["red", "blue", "black"]
-label_list = ["Tech", "HR", "Sales"]
-plt.hist(data_list, label=label_list,
-         color=color_list, edgecolor="white")
-plt.legend()
-plt.tight_layout()
-plt.show()
+df["avg_order_value"] = df["sales"]/df["orders"]
+df["high_value_customer"] = df["sales"] >= 1000
 print(df)
+print(df.groupby("region")[["sales", "cost", "orders", "profit", "profit_rate"]].aggregate(
+    ["mean", "std", "median"]))
+print(df[df["profit_rate"] > df["profit_rate"].mean()])
