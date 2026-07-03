@@ -6,20 +6,33 @@ pd.set_option('display.max_colwidth', None)  # 秀出儲存格完整文字
 
 
 data = {
-    "customer": ["C001", "C002", "C003", "C004", "C005", "C006", "C007", "C008"],
-    "region": ["North", "North", "South", "South", "East", "East", "West", "West"],
-    "sales": [1200, 800, 500, 1500, 300, 2000, 900, 400],
-    "cost": [900, 500, 450, 1000, 250, 1200, 700, 350],
-    "orders": [12, 8, 5, 15, 3, 20, 10, 4]
+    "product": ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10"],
+    "category": ["Electronics", "Electronics", "Home", "Home", "Sports", "Sports", "Beauty", "Beauty", "Food", "Food"],
+    "sales": [1200, 1800, 800, 900, 1500, 1000, 700, 600, 1100, 1300],
+    "cost": [900, 1200, 500, 650, 1200, 700, 300, 350, 800, 900],
+    "orders": [12, 18, 10, 8, 20, 12, 15, 10, 22, 26]
 }
 
 df = pd.DataFrame(data)
-df.at[3, "sales"] = df["sales"].median()
+print(df.isnull().sum())
 df["profit"] = df["sales"]-df["cost"]
 df["profit_rate"] = df["profit"]/df["sales"]
 df["avg_order_value"] = df["sales"]/df["orders"]
-df["high_value_customer"] = df["sales"] >= 1000
+df["avg_order_profit"] = df["profit"]/df["orders"]
+df["high_value_category"] = df["avg_order_value"] >= 100
+df["high_profit_category"] = df["profit_rate"] >= 0.3
+
+
+def range(x):
+    return max(x)-min(x)
+
+
 print(df)
-print(df.groupby("region")[["sales", "cost", "orders", "profit", "profit_rate"]].aggregate(
-    ["mean", "std", "median"]))
-print(df[df["profit_rate"] > df["profit_rate"].mean()])
+print(df.groupby("category")[["sales", "profit", "profit_rate", "avg_order_value"]].aggregate(
+    ["mean", "std", "median", "count", "max", "min", (range)]))
+
+df.groupby("category")["profit_rate"].mean().plot(kind="bar", rot=45)
+plt.xlabel("category")
+plt.ylabel("prfoit_rate")
+plt.tight_layout()
+plt.show()
