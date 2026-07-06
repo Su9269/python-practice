@@ -36,6 +36,26 @@ FROM players
 GROUP BY TEAM
 ```
 
+### row_number()分組
+- 「分組」之後再各自重新數數，而且絕對不會產生重複的行號
+```sql
+ROW_NUMBER() OVER (
+PARTITION BY 分組欄位決(定要在哪裡「重新數數」)
+ORDER BY 排序欄位(決定依照什麼順序來排這個行號))
+```
+```sql
+SELECT 
+    name, department, salary,
+    ROW_NUMBER() OVER (
+        PARTITION BY department 
+        ORDER BY salary DESC
+    ) as rn
+FROM employees;
+```
+- 這邊部門不一樣後rn會重新排
+
+
+
 ### JOIN（資料表合併）
 - FROM 表A JOIN 另一張表 ON 表A.欄位 = 表B.欄位 → 合併兩張表
 - **INNER JOIN**（預設的JOIN）→ 只保留兩邊都有對應資料的行（交集）
@@ -74,6 +94,16 @@ CASE
     ELSE 'bench'
 END AS player_level
 FROM players
+```
+### 整理資料
+- 用法:剔除完全相同的資料列，通常搭配 JOIN 使用
+- 整行比對：資料庫會檢查 p 資料表中的「所有欄位」，只有當兩筆（或以上）記錄的所有欄位值完全一樣時，才會被視為重複並被刪除。
+- 搭配 JOIN 使用：當資料表有多對一的關聯，且使用 JOIN 擴展資料時（導致主表 p 的內容在結果集中重複），此語法能將擴展出的重複主表資料去除。
+```sql
+SELECT DISTINCT p.*
+FROM products p
+JOIN categories c ON p.category_id = c.id
+WHERE c.type = 'Electronics';
 ```
 
 ### 重要提醒
