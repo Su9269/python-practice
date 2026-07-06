@@ -1,0 +1,13 @@
+import pandas as pd
+df_basics = pd.read_csv("nba player 202425 stats total.csv")
+df_advanced = pd.read_csv("nba player 202425 advanced stats.csv")
+df_salary = pd.read_csv("nba player 202425 salary.csv")
+df_playoff = pd.read_csv("nba team 202425 playoff.csv")
+print(df_advanced.columns.tolist())
+print(df_advanced.shape)
+print(df_basics.columns.tolist())
+print(df_basics.shape)
+print(df_playoff.columns.tolist())
+print(df_playoff.shape)
+print(df_salary.columns.tolist())
+print(df_salary.shape)
