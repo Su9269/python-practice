@@ -7,4 +7,4 @@ where (
         department = "HR"
         or department = "Admin"
     )
-    and salary > 80000
+    and salary > 80000Workers With The Highest Salaries
