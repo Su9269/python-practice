@@ -11,7 +11,10 @@
 - iloc = 取值
 - loc = 透過欄位選取資料
 - isnull = 檢查資料缺失的值，並回傳一個布林值
-- duplicated = 用來檢查 DataFrame 中是否有重複的列（Row），並回傳一個布林值
+- duplicated = 用來檢查 DataFrame 中是否有重複的列（Row），並回傳一個布林值:
+  1.first(默認)：將第一次出現之後的重複值標記為True
+  2.last：將最後一次出現之前的重複值標記為True
+  3.False：將所有重複的值都標記為True
 - astype = 將資料形式轉換成想要的種類
 - pd.set_option('display.max_rows', None)，設定最多顯示幾列
 - pd.set_option('display.max_columns', None)，設定最多顯示幾欄
