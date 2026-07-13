@@ -4,6 +4,8 @@ df_advanced = pd.read_csv("nba player 202425 advanced stats.csv")
 df_salary = pd.read_csv("nba player 202425 salary.csv")
 df_playoff = pd.read_csv("nba team 202425 playoff.csv")
 
+print(df_advanced[df_advanced["Player"].str.contains(
+    "Nikola Jovic", case=False, na=False)].T)
 duplicated_players = df_basics[df_basics["Player"].duplicated(
     keep=False)]["Player"].unique()
 # ~代表反轉:將不是重複的球員選出來、isin是看有沒有在裡面、|代表or
@@ -39,3 +41,5 @@ df_nba = df_nba.rename(columns={"Team_x": "Team"})
 
 
 print(df_nba.shape)
+df_nba.to_csv("nba player 202425 stats merged.csv", index=False)
+print("儲存完成")
