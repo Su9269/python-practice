@@ -1,4 +1,4 @@
-# Two Sum
+# 1.Two Sum
 class Solution(object):
     def twoSum(self, nums, target):
         seen = {}
@@ -12,7 +12,7 @@ class Solution(object):
 # Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
 
 
-# Given an integer x, return true if x is a palindrome, and false otherwise.
+# 2.Given an integer x, return true if x is a palindrome, and false otherwise.
 
 
 class Solution(object):
@@ -25,7 +25,7 @@ class Solution(object):
 # Explanation: 121 reads as 121 from left to right and from right to left.
 
 
-# Roman to Integer
+# 3.Roman to Integer
 
 
 class Solution(object):
@@ -47,3 +47,18 @@ class Solution(object):
 # Input: s = "III"
 # Output: 3
 # Explanation: III = 3.
+
+# 4.Longest Common Prefix
+
+
+class Solution(object):
+    def longestCommonPrefix(self, strs):
+        min_len = min(len(x)for x in strs)
+        ans = ""
+        for i in range(min_len):
+            letter = strs[0][i]
+            for word in strs[1:]:
+                if word[i] != letter:
+                    return ans
+# Input: strs = ["flower","flow","flight"]
+# Output: "fl"
