@@ -24,7 +24,7 @@ class Solution(object):
                 nums[slow] = nums[i]
                 # 把新數字搬到剛空出來的位置，覆蓋掉原本重複的舊值
 
-        return slow + 1
+        return len(set(nums))
         # slow 是「最後一個不重複元素的索引」(從0算起)
         # 索引+1 才是「數量」，例如 slow=2 代表索引0,1,2共3個，要+1才是k
 
