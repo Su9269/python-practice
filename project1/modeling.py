@@ -1,3 +1,5 @@
+from sklearn.metrics import silhouette_score
+from sklearn.cluster import KMeans
 import numpy as np
 from sklearn.decomposition import PCA
 import seaborn as sns
@@ -40,3 +42,51 @@ print(loadingS)
 # PC4：球星型 vs 場次型角色球員，正：G, MP, PF（出賽時間長、犯規多）、負：Trp-Dbl, USG%, VORP, PER（球星級指標）代表「數據全面、球權集中的球星」對比「時間久但普通的角色球員」
 # PC5：防守貢獻 vs 進攻球權需求，正：DBPM, BPM（防守正負值）、負：USG%（進攻球權使用率），代表「防守見長、球權需求低」對比「進攻主導、高使用率」球員
 # 註：PC4、PC5解釋力較低（各約5%、4%），訊號相對前3個較模糊，與前面主成分略有重疊屬正常現象。
+
+
+inertia_list = []
+for k in range(1, 11):
+    kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
+    # kmeans.fit(pca_result_final)：讓模型對你的5維PCA座標做分群訓練
+    kmeans.fit(pca_result_final)
+    inertia_list.append(kmeans.inertia_)
+
+
+plt.figure(figsize=(8, 5))
+plt.plot(range(1, 11), inertia_list, marker='o')
+plt.xlabel('K (群數)')
+plt.ylabel('Inertia (群內誤差)')
+plt.title('手肘法 - K值選擇')
+plt.show()
+
+# n_clusters=k 是設定要分成幾群、random_state=42 是為了讓每次跑出來的隨機初始化結果一致（方便重現）
+# n_init=10 是因為初始中心點是隨機選的，跑10次取最好的一次結果，避免運氣不好選到爛的起點
+# 注意：輪廓係數至少要分2群才有意義,K=1沒辦法算
+
+
+# fit_predict直接拿到每個球員（每一列）被分到哪一群（0/1/2/3），存成df_nba的新欄位Cluster
+kmeans_final = KMeans(n_clusters=4, random_state=42, n_init=10)
+clusterlabels = kmeans_final.fit_predict(pca_result_final)
+df_nba["Cluster"] = clusterlabels
+print(df_nba['Cluster'].value_counts())
+print(df_nba['Cluster'].nunique())
+# 看每一群在5個主成分上的平均值
+cluster_summary = df_nba.groupby('Cluster')[
+    [f'PC{i+1}' for i in range(5)]].mean() if 'PC1' in df_nba.columns else None
+
+# pca_result_final[:, i]是用numpy的切片語法，取出「所有列、第i欄」，也就是取出每個球員在第i個主成分上的座標值。
+# 迴圈跑5次，把PC1到PC5各自變成df_nba的新欄位。
+for i in range(5):
+    df_nba[f'PC{i+1}'] = pca_result_final[:, i]
+
+cluster_summary = df_nba.groupby(
+    'Cluster')[['PC1', 'PC2', 'PC3', 'PC4', 'PC5']].mean()
+print(cluster_summary)
+# 群0：穩定輪替的資深角色球員（出賽時間長，但非球星級別）
+# 群1：板凳末端/邊緣球員（各項數據全面偏低，出賽機會少）
+# 群2：聯盟頂級球星（整體產出量最高，各方面全面壓制其他群）
+# 群3：效率型外線射手（效率高、三分準，但整體產出量不算頂尖）
+
+# 舉例查詢，換成你認知的防守型球星
+print(df_nba[df_nba['Player'].isin(['Rudy Gobert', 'Bam Adebayo'])]
+      [['Player', 'Cluster', 'PC1', 'PC2', 'PC3', 'PC4', 'PC5']])
