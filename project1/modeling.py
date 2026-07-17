@@ -1,3 +1,6 @@
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import silhouette_score
 from sklearn.cluster import KMeans
 import numpy as np
@@ -57,7 +60,7 @@ plt.plot(range(1, 11), inertia_list, marker='o')
 plt.xlabel('K (群數)')
 plt.ylabel('Inertia (群內誤差)')
 plt.title('手肘法 - K值選擇')
-plt.show()
+# plt.show()
 
 # n_clusters=k 是設定要分成幾群、random_state=42 是為了讓每次跑出來的隨機初始化結果一致（方便重現）
 # n_init=10 是因為初始中心點是隨機選的，跑10次取最好的一次結果，避免運氣不好選到爛的起點
@@ -90,3 +93,51 @@ print(cluster_summary)
 # 舉例查詢，換成你認知的防守型球星
 print(df_nba[df_nba['Player'].isin(['Rudy Gobert', 'Bam Adebayo'])]
       [['Player', 'Cluster', 'PC1', 'PC2', 'PC3', 'PC4', 'PC5']])
+
+
+# 有標籤的資料，拿去train/test
+df_train_full = df_nba[df_nba['PLAYOFF'].notnull()].copy()
+# 沒有標籤的81筆，留到最後才用
+df_predict_set = df_nba[df_nba['PLAYOFF'].isnull()].copy()
+# select_dtypes(include='number')先抓出所有數值型欄位，再將不需要的欄位刪除
+feature_cols = df_train_full.select_dtypes(
+    include='number').columns.drop(['Rk', 'Salary', 'PLAYOFF', "Cluster", "PC1", "PC2", "PC3", "PC4", "PC5"])
+# X是特徵矩陣，y是要預測的答案。
+X = df_train_full[feature_cols]
+y = df_train_full['PLAYOFF']
+# 把487筆切成80%訓練、20%測試(test_size=0.2)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+# 建立隨機森林分類器，用訓練集去fit(學習)
+rf_model = RandomForestClassifier(random_state=42, class_weight='balanced')
+rf_model.fit(X_train, y_train)
+
+
+# rf_model.predict(X_test)：把「沒看過的」98筆特徵餵給訓練好的模型，讓它預測PLAYOFF是0還是1
+y_pred = rf_model.predict(X_test)
+
+# accuracy_score(y_test, y_pred)：拿模型「猜的答案」跟「真正的答案」比對，算出整體猜對的比例
+# classification_report：會給你更細緻的資訊，包含precision（精確率）、recall（召回率）、f1-score，不只是「猜對的比例」這麼粗略
+# confusion_matrix：一個2x2的表格，讓你看到「模型把0猜成0、把0猜成1、把1猜成0、把1猜成1」各自的數量
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+print(confusion_matrix(y_test, y_pred))
+
+# feature_importances_是模型訓練完後,自動算出每個變數對「判斷結果」的貢獻程度
+# pd.Series(資料, index=feature_cols)——pd.Series是pandas裡「一維帶標籤的資料」，跟你熟悉的DataFrame的「一欄」概念一樣。
+# 這裡的用法是：把feature_importances_這串沒有名字的數字，跟feature_cols（你的38個欄位名稱）綁在一起，這樣你才知道「哪個分數對應哪個變數」，不然只看到一串數字，不知道第一個數字是Age還是PTS。
+feature_importance = pd.Series(
+    rf_model.feature_importances_,
+    index=feature_cols
+).sort_values(ascending=False)
+
+print(feature_importance.head(10))
+
+# df_predict_set[feature_cols]——從切出來的81筆「沒有PLAYOFF標籤」的資料裡，只取出跟訓練時一模一樣的38個特徵欄位。
+X_predict = df_predict_set[feature_cols]
+# 用已經訓練好的模型(predict)去做預測
+predictions = rf_model.predict(X_predict)
+
+df_predict_set['Predicted_PLAYOFF'] = predictions
+print(df_predict_set[['Player', 'Team', 'Predicted_PLAYOFF']].to_string())
