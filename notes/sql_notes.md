@@ -106,6 +106,17 @@ JOIN categories c ON p.category_id = c.id
 WHERE c.type = 'Electronics';
 ```
 
+### Like
+```sql
+---用%
+WHERE first_name LIKE 'Jo%'      -- 開頭是Jo，後面接任意字元、任意長度
+WHERE first_name LIKE '%son'     -- 結尾是son，前面接任意字元
+WHERE first_name LIKE '%an%'     -- 中間任何位置包含an
+---用_(底線))
+WHERE first_name LIKE '_ohn'     -- 第一個字元任意，後面固定是ohn（例如John）
+WHERE first_name LIKE '_____h'   -- 剛好6個字元，最後一個固定是h
+```
+
 ### 重要提醒
 - 拿到資料要先檢查合理性，不要照單全收（今天發現資料集GP場次偏低，是賽季初截斷的小樣本，不是完整賽季數據）
 - SQL 跟 Pandas 邏輯高度重疊，只是語法不同，業界常常是「SQL撈資料 + Pandas做分析」搭配使用
