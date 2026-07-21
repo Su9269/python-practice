@@ -26,7 +26,7 @@ df.loc[df["MA5"] > df["MA20"], "signal"] = 1
 # 不持有
 df.loc[df["MA5"] < df["MA20"], "signal"] = -1
 # 交叉點
-df["position"] = df["signal"].diff()
+df["position"] = df["signal"].shift(1).diff()
 # 設置買賣點
 buy = df[df["position"] == 2].dropna()
 sell = df[df["position"] == -2].dropna()
@@ -63,3 +63,10 @@ plt.title("策略比較")
 plt.legend()
 plt.tight_layout()
 plt.show()
+
+daily_v1 = np.diff(df["Close"]) / df["Close"][:-1].values
+daily_v2 = df["Close"].pct_change().dropna()
+
+print(daily_v1[:5])
+print(daily_v2.head())
+print(np.allclose(daily_v1, daily_v2.values))
