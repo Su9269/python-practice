@@ -24,12 +24,12 @@ df["signal"] = 0
 # 持有
 df.loc[df["MA5"] > df["MA20"], "signal"] = 1
 # 不持有
-df.loc[df["MA5"] < df["MA20"], "signal"] = -1
+df.loc[df["MA5"] < df["MA20"], "signal"] = 0
 # 交叉點
 df["position"] = df["signal"].shift(1).diff()
 # 設置買賣點
-buy = df[df["position"] == 2].dropna()
-sell = df[df["position"] == -2].dropna()
+buy = df[df["position"] == 1].dropna()
+sell = df[df["position"] == -1].dropna()
 plt.figure(figsize=(12, 6))
 plt.plot(df.index, df["MA5"], color="brown", label="MA5")
 plt.plot(df.index, df["MA20"], color="orange", label="MA20")
