@@ -64,9 +64,45 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 
-daily_v1 = np.diff(df["Close"]) / df["Close"][:-1].values
-daily_v2 = df["Close"].pct_change().dropna()
+# 參數網格搜尋
 
-print(daily_v1[:5])
-print(daily_v2.head())
-print(np.allclose(daily_v1, daily_v2.values))
+
+def backtest_ma_strategy(df, short_window, long_window):
+    df = df.copy()
+
+    # 1. 算短期和長期均線
+    df["MA_short"] = df["Close"].rolling(short_window).mean()
+    df["MA_long"] = df["Close"].rolling(long_window).mean()
+
+    # 2. 算signal（0/1，不是1/-1）
+    df["signal"] = 0
+    df.loc[df["MA_short"] > df["MA_long"], "signal"] = 1
+
+    # 3. 算策略報酬率（記得shift避免Lookahead Bias）
+    df["daily_return"] = df["Close"].pct_change()
+    df["strategy_return"] = df["daily_return"] * df["signal"].shift(1)
+
+    # 4. 算最終累積報酬率
+    cumulative_strategy = (1 + df["strategy_return"]).cumprod()
+    final_return = cumulative_strategy.iloc[-1] - 1
+
+    return final_return
+
+
+# 開始測試不同組均線造成的買賣效果哪一個最賺錢
+short_windows = [5, 10, 15, 20]
+long_windows = [20, 30, 60]
+
+results = []
+
+for short in short_windows:
+    for long in long_windows:
+        # continue 只跳過「這一輪」剩下的程式碼，但迴圈本身會繼續往下一輪跑
+        if short >= long:
+            continue
+        final_return = backtest_ma_strategy(df, short, long)
+        results.append({"short": short, "long": long, "return": final_return})
+
+results_df = pd.DataFrame(results)
+results_df = results_df.sort_values("return", ascending=False)
+print(results_df)
