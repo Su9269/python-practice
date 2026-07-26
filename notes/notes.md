@@ -39,6 +39,14 @@
 
 ## Function
 - cummax() = 計算出整體資料的最大值
+- "".join() = 把清單（list）裡的元素黏成一個字串
+     e.g(1):words = ['h', 'e', 'l', 'l', 'o']
+            result = "".join(words)
+            print(result)  # 輸出: hello
+     e.g(2):num_list = [1, 2, 3]
+            result = "".join(str(x) for x in num_list) #先把 1,2,3 變成 '1','2','3' 再黏
+            print(result) # 輸出: "123"
+
 
 ## Scikit-learn
 - model.fit() = 讓模型去適應(訓練)數據，x:用來訓練的變數 y:目標變數，想要預測的值
