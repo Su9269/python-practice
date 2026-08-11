@@ -138,6 +138,14 @@ where c.temperature > w.temperature
    - 之後在WHERE子句比較數值時（例如`c.temperature > w.temperature`），如果w那邊是NULL，比較結果會是「未知」，SQL自動視為不符合條件、篩掉——最終結果通常跟INNER JOIN一樣，但LEFT JOIN的過程更透明、更適合用來檢查資料完整性
 - **實務應用場景**：金融/股票資料是最典型的例子。週一要比較「前一天」，但週日沒開市根本沒有資料，`DATE_SUB`算出來的「昨天」在資料庫裡是不存在的，這種情況一定要用LEFT JOIN處理，不能假設每一天都連續存在
 
+### if
+- IF(條件式, 成立時的回傳值, 不成立時的回傳值)
+```sql
+-- 在查詢時轉換
+SELECT name, IF(score >= 60, '及格', '不及格') AS status FROM Exams
+-- 在更新時互換
+UPDATE Salary SET sex = IF(sex = 'm', 'f', 'm')
+```
 
 ### 重要提醒
 - 拿到資料要先檢查合理性，不要照單全收（今天發現資料集GP場次偏低，是賽季初截斷的小樣本，不是完整賽季數據）
