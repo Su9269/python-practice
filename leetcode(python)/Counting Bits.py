@@ -1,6 +1,6 @@
 # Given an integer n, return an array ans of length n + 1 such that for each i (0 <= i <= n), ans[i] is the number of 1's in the binary representation of i.
 # Do not solve it with built-in functions (i.e., like __builtin_popcount in C++).
-
+# sol 1
 class Solution(object):
     def countBits(self, n):
         final = []
@@ -12,7 +12,15 @@ class Solution(object):
                 temp = temp//2
             final.append(num)
         return final
+# sol 2
 
+
+class Solution(object):
+    def countBits(self, n):
+        final = [0]*(n+1)
+        for i in range(1, n+1):
+            final[i] = final[i >> 1]+(i & 1)
+        return final
 # Example 1:
 # Input: n = 2
 # Output: [0,1,1]
